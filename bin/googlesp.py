@@ -8,7 +8,19 @@ from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 
-def run_google_speech(filename):
+def print_usage():
+    print("Usage: python googlesp [filename]")
+
+def run_google_speech():
+
+    if len(sys.argv) < 2:
+        print_usage()
+
+    if sys.argv[1].startswith("/"):
+        filename = sys.argv[1]
+    else:
+        filename = os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), sys.argv[1])
+
     client = speech.SpeechClient()
 
     # Loads the audio into memory
@@ -28,14 +40,7 @@ def run_google_speech(filename):
         print(result.alternatives[0].transcript)
 
 
-def print_usage():
-    print("Usage: python googlesp [filename]")
-
 if __name__ == '__main__':
 
-    if len(sys.argv) < 2:
-        print_usage()
+    run_google_speech()
 
-    filename = os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'resources', sys.argv[1])
-
-    run_google_speech(filename)

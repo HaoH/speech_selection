@@ -5,7 +5,20 @@ import sys
 import config
 from aip import AipSpeech
 
-def run_baiduaip(filename):
+def print_usage():
+    print("Usage: python baiduaip.py [abs_resource_path] [filename]")
+    print("e.g.: python baiduaip.py . audio.wav")
+
+def run_baiduaip():
+
+    if len(sys.argv) < 2:
+        print_usage()
+        return
+
+    if sys.argv[1].startswith("/"):
+        filename = sys.argv[1]
+    else:
+        filename = os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), sys.argv[1])
 
     client = AipSpeech(config.baidu['APP_ID'], config.baidu['API_KEY'], config.baidu['SECRET_KEY'])
 
@@ -20,15 +33,6 @@ def run_baiduaip(filename):
         print("ERROR: %s" % result['err_msg'])
 
 
-def print_usage():
-    print("Usage: python baiduaip [filename]")
-
-
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print_usage()
 
-    filename = os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), 'resources', sys.argv[1])
-
-    run_baiduaip(filename)
-
+    run_baiduaip()
