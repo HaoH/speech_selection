@@ -11,15 +11,7 @@ from google.cloud.speech import types
 def print_usage():
     print("Usage: python googlesp [filename]")
 
-def run_google_speech():
-
-    if len(sys.argv) < 2:
-        print_usage()
-
-    if sys.argv[1].startswith("/"):
-        filename = sys.argv[1]
-    else:
-        filename = os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), sys.argv[1])
+def run_google_speech(filename):
 
     client = speech.SpeechClient()
 
@@ -36,11 +28,24 @@ def run_google_speech():
     # Detects speech in the audio file
     response = client.recognize(config, audio)
 
+    msg = ''
     for result in response.results:
-        print(result.alternatives[0].transcript)
+        msg = result.alternatives[0].transcript
+        print(msg)
+
+    return msg
 
 
 if __name__ == '__main__':
 
-    run_google_speech()
+    if len(sys.argv) < 2:
+        print_usage()
+        sys.exit(-1)
+
+    if sys.argv[1].startswith("/"):
+        filename = sys.argv[1]
+    else:
+        filename = os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), sys.argv[1])
+
+    run_google_speech(filename)
 

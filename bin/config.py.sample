@@ -8,3 +8,10 @@ baidu = {
     'SECRET_KEY' : '',
 }
 
+mysql = {
+    'HOST': '',
+    'USER': '',
+    'PASSWD': '',
+    'DB': '',
+}
+
