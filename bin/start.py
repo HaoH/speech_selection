@@ -20,20 +20,15 @@ def fetch_audio_files(base_dir):
     cursor = db.cursor()
 
     # 使用 execute()  方法执行 SQL 查询
-    cursor.execute("select member_id, title, content, path, api_result, size, addtime from sr_follow_voice where addtime <= 1520492967 order by addtime desc limit 1")
+    cursor.execute("select member_id, title, content, path, api_result, size, addtime from sr_follow_voice where addtime <= 1520597730 order by addtime desc limit 1")
 
     result = cursor.fetchall()
     file_content_map = {}
     for data in result:
         filename = os.path.join(base_dir, data[3])
         content = data[2].replace('<p>', '').replace('</p>', '').replace('<br/>', '').replace('&nbsp;', '')
-        ifly_result = json.loads(data[4])
-        ifly_text = ' '.join(ifly_result["transcribedWords"])
         file_content_map.update({
-            filename : {
-                'content' : content,
-                'ifly_text' : ifly_text
-            }
+            filename : content,
         })
 
     # 关闭数据库连接
@@ -50,19 +45,20 @@ def run_speeches():
     file_content_map = fetch_audio_files(base_dir)
 
     for filename in file_content_map.keys():
-        data = file_content_map[filename]
-        content = data['content']
-        ifly_result = data['ifly_text']
+        print("audio: %s\n" % filename)
+
+        content = file_content_map[filename]
+        print("content: %s\n" % content)
 
         start = time.time()
         baidu_result = run_baiduaip(filename)
         baidu_cost = time.time() - start
+        print("baidu: %d sec.\n%s\n" % (baidu_cost, baidu_result))
 
         start = time.time()
         google_result = run_google_speech(filename)
         google_cost = time.time() - start
-
-        print("content: %s\nbaidu: %d sec.\n%s\ngoogle: %d sec.\n%s\nifly: x sec.\n%s\n\n" % (content, baidu_cost, baidu_result, google_cost, google_result, ifly_result))
+        print("google: %d sec.\n%s\n" % (google_cost, google_result))
 
 
 if __name__ == '__main__':

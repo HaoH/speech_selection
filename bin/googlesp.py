@@ -3,13 +3,18 @@
 import io
 import os
 import sys
-import config
+import audioread
 from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
+import config
 
 def print_usage():
     print("Usage: python googlesp [filename]")
+
+def get_sample_rate(filename):
+    with audioread.audio_open(filename) as f:
+        return f.samplerate
 
 def run_google_speech(filename):
 
@@ -20,9 +25,12 @@ def run_google_speech(filename):
         content = audio_file.read()
         audio = types.RecognitionAudio(content=content)
 
+    sample_rate = get_sample_rate(filename)
+    #print("sample_rate: %d\n" % sample_rate)
+
     config = types.RecognitionConfig(
         encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-        sample_rate_hertz=16000,
+        sample_rate_hertz=sample_rate,
         language_code='en-US')
 
     # Detects speech in the audio file
@@ -48,4 +56,5 @@ if __name__ == '__main__':
         filename = os.path.join(os.path.dirname(os.path.dirname(sys.argv[0])), sys.argv[1])
 
     run_google_speech(filename)
+
 

@@ -1,4 +1,4 @@
-aip==1.0.0.5
+audioread==2.1.5
 baidu-aip==2.2.0.0
 cachetools==2.0.1
 certifi==2018.1.18

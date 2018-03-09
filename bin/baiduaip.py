@@ -2,12 +2,17 @@
 
 import os
 import sys
-import config
+import audioread
 from aip import AipSpeech
+import config
 
 def print_usage():
     print("Usage: python baiduaip.py [filename]")
     print("e.g.: python baiduaip.py . audio.wav")
+
+def get_sample_rate(filename):
+    with audioread.audio_open(filename) as f:
+        return f.samplerate
 
 def run_baiduaip(filename):
 
@@ -16,7 +21,10 @@ def run_baiduaip(filename):
     with open(filename, 'rb') as fp:
         content = fp.read()
 
-    result = client.asr(content, 'wav', 16000, {'lan': 'en',})
+    sample_rate = get_sample_rate(filename)
+    #print("sample_rate: %d\n" % sample_rate)
+
+    result = client.asr(content, 'wav', sample_rate, {'lan': 'en',})
 
     if result['err_msg'] == 'success.':
         msg = result['result'][0]
