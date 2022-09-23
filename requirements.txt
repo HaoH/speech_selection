@@ -9,7 +9,7 @@ google-cloud-speech==0.32.1
 googleapis-common-protos==1.5.3
 grpcio==1.10.0
 idna==2.6
-protobuf==3.5.2
+protobuf==3.18.3
 pyasn1==0.4.2
 pyasn1-modules==0.2.1
 PyMySQL==0.8.0
